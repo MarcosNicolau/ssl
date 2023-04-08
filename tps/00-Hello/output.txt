@@ -1,0 +1,5 @@
+Program name: ./app.out
+
+Printing all the provided arguments: 
+	- The argument number 1 supplied is: "hello"
+	- The argument number 2 supplied is: "world"
