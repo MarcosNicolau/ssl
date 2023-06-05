@@ -8,7 +8,6 @@
 
 int isAlphabetString(char *word, int isAlphabetCharacter(char word))
 {
-    int verifies = 1;
     for (int i = 0; word[i]; i++)
     {
         if (!isAlphabetCharacter(word[i]))
@@ -21,15 +20,14 @@ int isAlphabetString(char *word, int isAlphabetCharacter(char word))
 int isLanguageWord_1(char *word, int stateMatrix[][COLS], int get_col(char c))
 {
     int i = 0;
-    int node = 0;
+    int state = 0;
     char c = word[i];
 
     while (c != '\0')
     {
-        int state = stateMatrix[node][get_col(c)];
+        state = stateMatrix[state][get_col(c)];
         if (state == COLS)
             return 0;
-        node = state;
         c = word[++i];
     }
     return 1;
@@ -40,13 +38,11 @@ int isLanguageWord_2(char *word, int stateMatrix[][COLS], int get_col(char c))
 {
     int i = 0;
     int state;
-    int node = 0;
     char c = word[i];
 
     while (c != '\0')
     {
-        state = stateMatrix[node][get_col(c)];
-        node = state;
+        state = stateMatrix[state][get_col(c)];
         c = word[++i];
     }
 
