@@ -2,9 +2,9 @@
 
 The goal of this assignment was to develop two programs.
 
-One which could validate an string composed of octal, decimal and hexadecimal numbers, separated by a '$'.
+One which could validate a string composed of octal, decimal, and hexadecimal numbers, separated by a '$'.
 
-And another where given an string composed of decimal number and the 4 basic operators, should calculate and return the result.
+And another, given a string composed of decimal numbers and the 4 essential operators, should calculate and return the result.
 
 You can read the full assignment [here](./assignment.md).
 
@@ -13,7 +13,7 @@ You can read the full assignment [here](./assignment.md).
 To validate the strings the following automata were used:
 
 -   [first exercise](./assets/automata_1.png)
--   [third exercise](./assets/automata_1.png)
+-   [third exercise](./assets/automata_2.png)
 
 The failure states were ignored in the graphics because it became a real mess. :)
 
