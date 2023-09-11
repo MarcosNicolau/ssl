@@ -1,0 +1,14 @@
+{
+	"name": "js",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"sort": "node sort.js",
+		"find": "node find.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC"
+}
