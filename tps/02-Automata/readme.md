@@ -23,7 +23,5 @@ The autómatas were drawn using [graphviz](http://magjac.com/graphviz-visual-edi
 
 ## Run the programs
 
-If you wish to run the programs, you can do it by executing the makefile:
-
-1. ex_1: `make 1 arg=<STRING_TO_VALIDATE>`
-2. ex_2: `make 2 arg=<STRING_TO_CALCULATE>`
+1. Give permission to the script: `chmod +x ./run.sh`
+2. Execute it: `$ ./run.sh <PROGRAM> <ARGUMENT>` or run `./run.sh --help` for help.
