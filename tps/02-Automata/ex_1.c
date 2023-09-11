@@ -18,20 +18,32 @@ int get_col(char c)
         return 5;
     if (c == '$')
         return 6;
+    else
+        return -1;
+}
+
+int alphabet(char c)
+{
+    if (get_col(c) != -1)
+        return 1;
+    return 0;
 }
 
 int octal_count = 0;
 int decimal_count = 0;
 int hex_count = 0;
 
-void count(int state)
+void count(int, int state, int col, char c)
 {
-    if (state == 1 || state == 2 || state == 3)
-        decimal_count++;
-    else if (state == 4 || state == 5)
-        octal_count++;
-    else
-        hex_count++;
+    if (col == 6 || c == '\0')
+    {
+        if (state == 2 || state == 3)
+            decimal_count++;
+        else if (state == 4 || state == 5)
+            octal_count++;
+        else
+            hex_count++;
+    }
 }
 
 int main(int argc, char *argv[])
@@ -62,14 +74,13 @@ int main(int argc, char *argv[])
         {9, 9, 9, 9, 9, 9, 0}}; // state 9 failure
     int separator_col = get_col('$');
     int final_states[6] = {2, 3, 4, 5, 7, 8};
-    int is_valid = automata_validation(string, separator_col, 7, transition_matrix, get_col, 6, final_states, count);
+    char *error_msg = automata_validation(string, alphabet, 7, transition_matrix, get_col, 6, final_states, count);
 
-    if (!is_valid)
+    if (!error_msg)
     {
-        printf("There has been a lexical word! Exiting program...");
-        return -1;
+        printf("Count: \ndecimal: %d \noctal: %d\nhexa: %d\n", decimal_count, octal_count, hex_count);
+        return 0;
     }
-    printf("Count: \ndecimal: %d \noctal: %d\nhexa: %d", decimal_count, octal_count, hex_count);
-
-    return 0;
+    printf("%s", error_msg);
+    return -1;
 }
