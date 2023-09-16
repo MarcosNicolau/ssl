@@ -3,30 +3,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct CharNode
+typedef struct Node
 {
-    char value;
-    struct CharNode *next;
-};
+    int value;
+    struct Node *next;
+} Node;
 
-int is_empty(struct CharNode *node)
+int is_empty(Node *node)
 {
     return !node;
 }
 
-void push_front(char value, struct CharNode **node)
+void push_front(int value, Node **node)
 {
-    struct CharNode *new_node = (struct CharNode *)
-        malloc(sizeof(struct CharNode));
+    Node *new_node = (Node *)
+        malloc(sizeof(Node));
     new_node->value = value;
     new_node->next = *node;
     *node = new_node;
 }
 
-void push_back(char value, struct CharNode **node)
+void push_back(int value, Node **node)
 {
-    struct CharNode *new_node = (struct CharNode *)
-        malloc(sizeof(struct CharNode));
+    Node *new_node = (Node *)
+        malloc(sizeof(Node));
     new_node->value = value;
     new_node->next = NULL;
     if (*node == NULL)
@@ -34,7 +34,7 @@ void push_back(char value, struct CharNode **node)
         *node = new_node;
         return;
     }
-    struct CharNode *tmp = *node;
+    Node *tmp = *node;
     while (tmp->next != NULL)
     {
         tmp = tmp->next;
@@ -42,15 +42,25 @@ void push_back(char value, struct CharNode **node)
     tmp->next = new_node;
 }
 
-char pop(struct CharNode **node)
+int pop(Node **node)
 {
     if (is_empty(*node))
         return -1;
-    char popped = (*node)->value;
-    struct CharNode *tmp = *node;
+    int popped = (*node)->value;
+    Node *tmp = *node;
     *node = tmp->next;
     free(tmp);
     return popped;
+}
+
+void show(Node *list)
+{
+    while (list->next != NULL)
+    {
+        printf("%d\n", list->value);
+        list = list->next;
+    }
+    printf("%d\n", list->value);
 }
 
 #endif

@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include "./libs/os.h"
 #include "./libs/calculator.h"
-#include "./libs/automata.h"
+#include "./libs/validation.h"
+#include "./libs/consts.h"
+#include "./libs/lists.h"
 
 int get_col(char c)
 {
@@ -9,7 +11,7 @@ int get_col(char c)
         return 0;
     if (c == '+' || c == '-')
         return 1;
-    if (c == '*' || c == '/')
+    if (c == '*' || c == '/' || c == '^')
         return 2;
     else
         return -1;
@@ -22,50 +24,88 @@ int alphabet(char c)
     return 0;
 }
 
-// Not a fan of global variables but I can't find any workaround
-int result = 0;
-void calculate_result(int, int, int col, char c)
+/**
+ * Resolves the list in order, that is it does not respect the precedence of the operators.
+ *
+ * @param list expects a list where every number is followed by an operation(+,-,/,-,^) which has to be followed by another number.
+ */
+int resolve_list(Node *list)
 {
-    // Declaring this variables as static so they don't lose their state between each call
-    // This is pretty useful, because it allows us to limit the scope of the variables
-    static int tmp_res = 0;
-    static char tmp_operation = '\0';
-    static char operation = '\0';
+    int result = list->value;
+    while (list->next != NULL)
+    {
+        char operation = list->next->value;
+        Node *number2Ptr = list->next->next;
+        result = calculate(result, operation, number2Ptr->value);
+        if (number2Ptr->next != NULL)
+            list = number2Ptr;
+        else
+            break;
+    }
+    return result;
+}
 
-    if (col == 1 || c == '\0')
+int eval(char *string)
+{
+    Node *result_queue = NULL;
+    Node *precedence_queue = NULL;
+    int i = 0;
+    int number = 0;
+    char c = string[i];
+
+    while (c != '\0')
     {
-        result = calculate(result, tmp_res, operation);
-        operation = c;
-        tmp_res = 0;
-        tmp_operation = '\0';
+        int col = get_col(c);
+        if (col == 1)
+        {
+            push_back(number, &precedence_queue);
+            push_back(resolve_list(precedence_queue), &result_queue);
+            push_back(c, &result_queue);
+            precedence_queue = NULL;
+            number = 0;
+        }
+        else if (col == 2)
+        {
+            push_back(number, &precedence_queue);
+            push_back(c, &precedence_queue);
+            number = 0;
+        }
+        else
+            number = mergeNumbers(number, char_to_int(c));
+
+        c = string[++i];
     }
-    if (col == 2)
-    {
-        tmp_operation = c;
-    }
-    else
-    {
-        tmp_res = calculate(tmp_res, char_to_int(c), tmp_operation);
-    }
+
+    push_back(number, &precedence_queue);
+    push_back(resolve_list(precedence_queue), &result_queue);
+
+    return resolve_list(result_queue);
 }
 
 int main(int argc, char *argv[])
 {
     char *string = getSingleArgument(argc, argv);
-    // Check the automata here file://./../assets/automata_2.png
+    // Check the automata here file://./assets/automata_2.png
     int transition_matrix[4][3] = {
         {1, 2, 3},
-        {3, 2, 2},
+        {1, 2, 2},
         {1, 3, 3},
         {3, 3, 3}};
     int final_states[1] = {1};
 
-    char *error_msg = automata_validation(string, alphabet, 3, transition_matrix, get_col, 1, final_states, calculate_result);
-    if (!error_msg)
+    int is_valid1 = is_alphabet_string(string, alphabet);
+    if (!is_valid1)
     {
-        printf("The result of the operation is: %d\n", result);
-        return 0;
+        printf("%s", ERROR_MSG.NOT_ALPHABET_STRING);
+        return -1;
     }
-    printf("%s", error_msg);
-    return -1;
+    int is_valid = automata_validation(string, 3, transition_matrix, get_col, 1, final_states);
+    if (!is_valid)
+    {
+        printf("%s", ERROR_MSG.LEXICAL_ERROR);
+        return -1;
+    }
+    int result = eval(string);
+    printf("The result of the operation is: %d\n", result);
+    return 0;
 }

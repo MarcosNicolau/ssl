@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "./libs/os.h"
-#include "./libs/automata.h"
+#include "./libs/validation.h"
+#include "./libs/consts.h"
 
 int get_col(char c)
 {
@@ -29,21 +30,56 @@ int alphabet(char c)
     return 0;
 }
 
-int octal_count = 0;
-int decimal_count = 0;
-int hex_count = 0;
-
-void count(int, int state, int col, char c)
+typedef struct Counter
 {
-    if (col == 6 || c == '\0')
+    int octal;
+    int decimal;
+    int hex;
+} Counter;
+
+enum NUMBER_TYPES
+{
+    DECIMAL,
+    OCTAL,
+    HEX
+};
+
+enum NUMBER_TYPES get_type_of_number(char *string)
+{
+    char first = string[0];
+    char second = string[1];
+    if (first == '0' && (second == 'x' || second == 'X'))
+        return HEX;
+    if (first == '0' && second != '\0')
+        return OCTAL;
+    return DECIMAL;
+};
+
+Counter count(char *string)
+{
+    Counter counter = {0, 0, 0};
+    int i = 0;
+    char c = string[i];
+    while (c != '\0')
     {
-        if (state == 2 || state == 3)
-            decimal_count++;
-        else if (state == 4 || state == 5)
-            octal_count++;
-        else
-            hex_count++;
+        if (c == '$' || i == 0)
+        {
+            char str[2];
+            str[0] = string[i == 0 ? i : i + 1];
+            str[1] = string[i == 0 ? i + 1 : i + 2];
+            enum NUMBER_TYPES typeof_number = get_type_of_number(str);
+            if (typeof_number == DECIMAL)
+                counter.decimal++;
+            if (typeof_number == OCTAL)
+                counter.octal++;
+            if (typeof_number == HEX)
+                counter.hex++;
+        }
+
+        c = string[++i];
     }
+
+    return counter;
 }
 
 int main(int argc, char *argv[])
@@ -71,16 +107,21 @@ int main(int argc, char *argv[])
         {7, 9, 8, 8, 8, 9, 9},  // state 6 HEXA
         {9, 9, 9, 9, 9, 9, 0},  // state 7 HEXA
         {8, 9, 8, 8, 8, 9, 0},  // state 8 HEXA
-        {9, 9, 9, 9, 9, 9, 0}}; // state 9 failure
-    int separator_col = get_col('$');
+        {9, 9, 9, 9, 9, 9, 9}}; // state 9 failure
     int final_states[6] = {2, 3, 4, 5, 7, 8};
-    char *error_msg = automata_validation(string, alphabet, 7, transition_matrix, get_col, 6, final_states, count);
-
-    if (!error_msg)
+    int alphabet_string = is_alphabet_string(string, alphabet);
+    if (!alphabet_string)
     {
-        printf("Count: \ndecimal: %d \noctal: %d\nhexa: %d\n", decimal_count, octal_count, hex_count);
-        return 0;
+        printf("%s", ERROR_MSG.NOT_ALPHABET_STRING);
+        return -1;
     }
-    printf("%s", error_msg);
-    return -1;
+    int is_valid = automata_validation(string, 7, transition_matrix, get_col, 6, final_states);
+    if (!is_valid)
+    {
+        printf("%s", ERROR_MSG.LEXICAL_ERROR);
+        return -1;
+    }
+    Counter counter = count(string);
+    printf("Count: \ndecimal: %d \noctal: %d\nhexa: %d\n", counter.decimal, counter.octal, counter.hex);
+    return 0;
 }
