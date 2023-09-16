@@ -50,7 +50,7 @@ enum NUMBER_TYPES get_type_of_number(char *string)
     char second = string[1];
     if (first == '0' && (second == 'x' || second == 'X'))
         return HEX;
-    if (first == '0' && second != '\0')
+    if (first == '0' && second >= '0' && second <= '7')
         return OCTAL;
     return DECIMAL;
 };
@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
         {4, 9, 5, 9, 9, 6, 0},  // state 3 DECIMAL
         {9, 9, 9, 9, 9, 9, 0},  // state 4 OCTAL
         {5, 9, 5, 9, 9, 9, 0},  // state 5 OCTAL
-        {7, 9, 8, 8, 8, 9, 9},  // state 6 HEXA
+        {7, 9, 8, 8, 8, 9, 9},  // state 6
         {9, 9, 9, 9, 9, 9, 0},  // state 7 HEXA
         {8, 9, 8, 8, 8, 9, 0},  // state 8 HEXA
         {9, 9, 9, 9, 9, 9, 9}}; // state 9 failure
