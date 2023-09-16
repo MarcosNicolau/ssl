@@ -2,9 +2,9 @@
 
 The goal of this assignment was to develop two programs.
 
-One which could validate a string composed of octal, decimal, and hexadecimal numbers, separated by a '$'.
+One which could validate a string composed of octal, decimal, and hexadecimal numbers, separated by a '$' and count each one of the types.
 
-And another, given a string composed of decimal numbers and the 4 essential operators, should calculate and return the result.
+And another, where given a string composed of decimal numbers and the 4 essential operators, should calculate and return the result.
 
 You can read the full assignment [here](./assignment.md).
 
