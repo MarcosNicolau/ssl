@@ -7,7 +7,7 @@ show_help(){
     echo "$ ./run.sh 2 3*4+12/6"
 }
 
-if [ $1 = "--help" ] ||[ $1 = "-h" ]; then 
+if [ -z $1 ] || [ $1 = "--help" ] || [ $1 = "-h" ]; then 
     show_help
     exit 0
 fi
