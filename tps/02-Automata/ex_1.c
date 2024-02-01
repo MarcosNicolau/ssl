@@ -29,7 +29,6 @@ int alphabet(char c)
         return 1;
     return 0;
 }
-
 typedef struct Counter
 {
     int octal;

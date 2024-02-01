@@ -27,10 +27,9 @@ int get_col(char c)
 
 int main(int argc, char *argv[])
 {
-    char *string = getArgument(argc, argv);
-    int stateMatrix[4][3] = {{1, 1, 2},
-                             {3, 3, 2},
-                             {3, 3, 2},
+    char *string = getSingleArgument(argc, argv);
+    int stateMatrix[4][3] = {{1, 1, 1},
+                             {3, 3, 1},
                              {3, 3, 3}};
     if (!isAlphabetString(string, alphabet))
     {

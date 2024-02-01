@@ -25,7 +25,7 @@ int alphabet(char c)
 }
 
 /**
- * Resolves the list in order, that is it does not respect the precedence of the operators.
+ * Resolves the list in order, that is, it does not respect the precedence of the operators.
  *
  * @param list expects a list where every number is followed by an operation(+,-,/,-,^) which has to be followed by another number.
  */
@@ -92,7 +92,6 @@ int main(int argc, char *argv[])
         {1, 3, 3},
         {3, 3, 3}};
     int final_states[1] = {1};
-
     int is_valid1 = is_alphabet_string(string, alphabet);
     if (!is_valid1)
     {
